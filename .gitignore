@@ -1,0 +1,27 @@
+# Build output
+bin/
+obj/
+
+# IDE (Rider / IntelliJ / VS / VS Code)
+.idea/
+.vs/
+.vscode/
+*.user
+*.suo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local secrets and config
+appsettings.Local.json
+*.secrets.json
+.env
+
+# Logs
+*.log
+
+# Frontend (for later)
+node_modules/
+dist/
+.angular/

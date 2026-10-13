@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Overload.Api/Overload.Api.csproj" />
+  <Project Path="Overload.Domain/Overload.Domain.csproj" />
+</Solution>
