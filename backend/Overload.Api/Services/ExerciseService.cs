@@ -25,7 +25,9 @@ public class ExerciseService(OverloadDbContext db) : IExerciseService
         var exercise = new Exercise
         {
             Name = request.Name,
-            Category = request.Category
+            Category = request.Category,
+            IsCustom = true,
+            CreatedByUserId = userId
         };
         db.Exercises.Add(exercise);
         await db.SaveChangesAsync();
