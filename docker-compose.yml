@@ -1,0 +1,38 @@
+name: overload
+
+services:
+  db:
+    image: postgres:17
+    container_name: overload-db
+    environment:
+      POSTGRES_USER: overload
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev}
+      POSTGRES_DB: overload
+    ports:
+      - "5432:5432"
+    volumes:
+      - overload-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U overload -d overload"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: ./backend
+    container_name: overload-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      # '__' wordt in .NET ':' -> ConnectionStrings:Default. Host is de servicenaam 'db', niet localhost.
+      ConnectionStrings__Default: Host=db;Port=5432;Database=overload;Username=overload;Password=${POSTGRES_PASSWORD:-dev}
+    ports:
+      - "5226:8080"
+
+volumes:
+  overload-data:
+    # Zelfde volumenaam als bij 'docker run', zodat bestaande data behouden blijft
+    name: overload-data
