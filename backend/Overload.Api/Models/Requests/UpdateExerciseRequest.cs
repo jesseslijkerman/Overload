@@ -1,5 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Overload.Api.Models.Requests;
 
 public record UpdateExerciseRequest(
-    string Name,
-    string? Category);
+    [Required, StringLength(100, MinimumLength = 1)] string Name,
+    [StringLength(50)] string? Category);

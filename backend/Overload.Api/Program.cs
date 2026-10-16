@@ -1,11 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Overload.Api.Data;
+using Overload.Api.Exceptions;
 using Overload.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 
 builder.Services.AddDbContext<OverloadDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
@@ -23,6 +26,8 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<OverloadDbContext>();
     await db.Database.MigrateAsync();
 }
+
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {

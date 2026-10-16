@@ -27,12 +27,12 @@ services:
         condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      # '__' wordt in .NET ':' -> ConnectionStrings:Default. Host is de servicenaam 'db', niet localhost.
+      # '__' becomes ':' in .NET -> ConnectionStrings:Default. The host is the service name 'db', not localhost.
       ConnectionStrings__Default: Host=db;Port=5432;Database=overload;Username=overload;Password=${POSTGRES_PASSWORD:-dev}
     ports:
       - "5226:8080"
 
 volumes:
   overload-data:
-    # Zelfde volumenaam als bij 'docker run', zodat bestaande data behouden blijft
+    # Same volume name as the earlier 'docker run', so existing data is kept
     name: overload-data
