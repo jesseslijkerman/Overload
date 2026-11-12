@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Overload.Api.Models.Requests;
+using Overload.Api.Models.Responses;
 using Overload.Api.Services;
-using Overload.Domain.Entities;
 
 namespace Overload.Api.Controllers;
 
@@ -11,43 +11,43 @@ public class ExerciseController(IExerciseService service, ICurrentUser user) : C
 {
     /// <summary>Lists the default exercises plus the current user's own exercises.</summary>
     [HttpGet]
-    [ProducesResponseType<List<Exercise>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<Exercise>>> GetAllExercises()
+    [ProducesResponseType<List<ExerciseResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<ExerciseResponse>>> GetAllExercises()
     {
         var exercises = await service.GetAllAsync(user.Id);
-        return Ok(exercises);
+        return Ok(exercises.Select(ExerciseResponse.From).ToList());
     }
 
     [HttpGet("{id:int}")]
-    [ProducesResponseType<Exercise>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ExerciseResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Exercise>> GetExerciseById(int id)
+    public async Task<ActionResult<ExerciseResponse>> GetExerciseById(int id)
     {
         var exercise = await service.GetByIdAsync(id, user.Id);
-        return Ok(exercise);
+        return Ok(ExerciseResponse.From(exercise));
     }
 
     [HttpPost]
-    [ProducesResponseType<Exercise>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ExerciseResponse>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<Exercise>> CreateExercise([FromBody] CreateExerciseRequest request)
+    public async Task<ActionResult<ExerciseResponse>> CreateExercise([FromBody] CreateExerciseRequest request)
     {
         var created = await service.CreateAsync(request, user.Id);
 
         // 201 with a Location header pointing to GET api/exercise/{id}
-        return CreatedAtAction(nameof(GetExerciseById), new { id = created.Id }, created);
+        return CreatedAtAction(nameof(GetExerciseById), new { id = created.Id }, ExerciseResponse.From(created));
     }
 
     [HttpPut("{id:int}")]
-    [ProducesResponseType<Exercise>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ExerciseResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<Exercise>> UpdateExercise(int id, [FromBody] UpdateExerciseRequest request)
+    public async Task<ActionResult<ExerciseResponse>> UpdateExercise(int id, [FromBody] UpdateExerciseRequest request)
     {
         var updated = await service.UpdateAsync(id, request, user.Id);
-        return Ok(updated);
+        return Ok(ExerciseResponse.From(updated));
     }
 
     [HttpDelete("{id:int}")]
