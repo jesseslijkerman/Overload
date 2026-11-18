@@ -1,0 +1,57 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 480px;
+  margin: 0 auto;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--ov-space-3);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 2rem;
+  }
+
+  &__content {
+    flex-grow: 1;
+    padding: 0 var(--ov-space-3) var(--ov-space-3);
+  }
+
+  &__tabs {
+    display: flex;
+    position: sticky;
+    bottom: 0;
+    background: var(--p-surface-950);
+    border-top: 1px solid var(--p-content-border-color);
+  }
+
+  &__tab {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 64px;
+    border-top: 3px solid transparent;
+    font-family: var(--ov-font-label);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--p-text-muted-color);
+
+    &--active {
+      border-top-color: var(--p-primary-color);
+      color: var(--p-primary-color);
+    }
+  }
+}
+
+// Light theme: the tab bar follows the light page color
+:host-context(html:not(.app-dark)) .shell__tabs {
+  background: var(--p-surface-50);
+}

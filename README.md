@@ -21,7 +21,7 @@ Progressive overload tracker met grafieken per oefening. Backend in ASP.NET Core
 | Backend | ASP.NET Core Web API, C#, .NET 10 |
 | ORM | Entity Framework Core (Code First) |
 | Database | PostgreSQL 17 |
-| Frontend | Angular (gepland) |
+| Frontend | Angular 21 + PrimeNG 21 (MIT-versie) |
 | Auth | Azure AD B2C (gepland) |
 | Containers | Docker Compose |
 
@@ -29,7 +29,7 @@ Progressive overload tracker met grafieken per oefening. Backend in ASP.NET Core
 
 ```
 Overload/
-  docker-compose.yml        db + api in één keer
+  docker-compose.yml        db + api + web in één keer
   .env.example              voorbeeld voor het wachtwoord
   backend/
     Dockerfile
@@ -42,20 +42,24 @@ Overload/
       Models/Requests/      request-records (DTO's)
       Data/                 OverloadDbContext
       Migrations/
-  frontend/
+  frontend/                 Angular-app
+    Dockerfile              bouwt de app en serveert hem met nginx
+    nginx.conf              serveert de app en stuurt /api door naar de API
+    src/theme/              PrimeNG-thema (kleuren), src/styles.scss = globale stijlen
 ```
 
 Afhankelijkheden lopen één kant op: `Overload.Api` verwijst naar `Overload.Domain`, niet andersom.
 
 ## Alles starten met Docker
 
-Database en API tegelijk:
+Database, API en frontend tegelijk:
 
 ```bash
 docker compose up --build
 ```
 
 - De API wacht tot Postgres gezond is en past bij het opstarten automatisch de migraties toe (`MigrateAsync()` in `Program.cs`). Je hoeft dus geen `dotnet ef database update` te draaien.
+- Frontend: <http://localhost:4300> (nginx stuurt `/api` door naar de API)
 - API: <http://localhost:5226/api/exercise>
 - OpenAPI-document (alleen in Development): <http://localhost:5226/openapi/v1.json>
 
@@ -68,7 +72,7 @@ Handige commando's:
 | Stoppen | `docker compose down` |
 | Stoppen en database wissen | `docker compose down -v` |
 | Alleen de database starten | `docker compose up -d db` |
-| Opnieuw bouwen na codewijziging | `docker compose up --build api` |
+| Opnieuw bouwen na codewijziging | `docker compose up --build api` (of `web`) |
 
 Wachtwoord aanpassen: kopieer `.env.example` naar `.env` en wijzig `POSTGRES_PASSWORD`. Het wachtwoord wordt bij het eerste aanmaken van het volume vastgelegd. Wijzig je het later, doe dan eerst `docker compose down -v`.
 
@@ -117,6 +121,8 @@ Database bekijken in Rider: Database-paneel, `+`, Data Source, PostgreSQL, host 
 
 | Wat | Waar | Poort |
 |---|---|---|
+| Frontend via Docker | <http://localhost:4300> | 4300 (container 80) |
+| Frontend via `ng serve` | <http://localhost:4200> | 4200 |
 | API via Docker | <http://localhost:5226> | 5226 (container 8080) |
 | API via Rider, profiel `http` | <http://localhost:5226> | 5226 |
 | API via Rider, profiel `https` | <https://localhost:7259> | 7259 |

@@ -1,0 +1,23 @@
+<div class="shell">
+  <header class="shell__header">
+    <h1 class="ov-heading shell__title">Overload</h1>
+    <p-button
+      [label]="theme.isDark() ? 'Light theme' : 'Dark theme'"
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="theme.toggle()"
+    />
+  </header>
+
+  <main class="shell__content">
+    <router-outlet />
+  </main>
+
+  <nav class="shell__tabs" aria-label="Main">
+    @for (tab of tabs; track tab.path) {
+      <a class="shell__tab" [routerLink]="tab.path" routerLinkActive="shell__tab--active">
+        {{ tab.label }}
+      </a>
+    }
+  </nav>
+</div>

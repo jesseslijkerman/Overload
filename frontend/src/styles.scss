@@ -1,0 +1,79 @@
+/*
+ * Overload global stylesheet: the single place for app-wide styling.
+ * Colors come from the PrimeNG preset (src/theme/overload-preset.ts) via --p-* variables.
+ * App-specific tokens use the --ov-* prefix.
+ */
+
+:root {
+  // Fonts
+  --ov-font-display: 'Pixelify Sans', monospace; // numbers and headings
+  --ov-font-label: 'Silkscreen', monospace; // small caps labels
+  --ov-font-body: Inter, system-ui, sans-serif;
+
+  // Accent: gold is reserved for personal records
+  --ov-accent-pr: #f2c94c;
+  --ov-on-accent-pr: #07170d;
+
+  // Shape and spacing
+  --ov-radius-card: 12px;
+  --ov-radius-control: 8px;
+  --ov-touch-target: 44px;
+  --ov-space-1: 0.25rem;
+  --ov-space-2: 0.5rem;
+  --ov-space-3: 1rem;
+  --ov-space-4: 1.5rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--ov-font-body);
+  background: var(--p-surface-950);
+  color: var(--p-surface-0);
+}
+
+// Light theme: swap the page colors (dark is the default)
+html:not(.app-dark) body {
+  background: var(--p-surface-50);
+  color: var(--p-surface-800);
+}
+
+// Pixel-art images and SVGs stay sharp when scaled up
+.ov-pixel {
+  image-rendering: pixelated;
+  shape-rendering: crispEdges;
+}
+
+// Utility classes
+.ov-heading {
+  font-family: var(--ov-font-display);
+  font-weight: 700;
+}
+
+.ov-label {
+  font-family: var(--ov-font-label);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--p-primary-color);
+}
+
+.ov-card {
+  background: var(--p-content-background);
+  border-radius: var(--ov-radius-card);
+  padding: var(--ov-space-3);
+}
+
+.ov-pr-chip {
+  font-family: var(--ov-font-label);
+  font-size: 0.75rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  background: var(--ov-accent-pr);
+  color: var(--ov-on-accent-pr);
+}

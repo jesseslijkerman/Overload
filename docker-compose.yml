@@ -32,6 +32,16 @@ services:
     ports:
       - "5226:8080"
 
+  web:
+    build:
+      context: ./frontend
+    container_name: overload-web
+    depends_on:
+      - api
+    ports:
+      # 4300 on purpose: 'ng serve' uses 4200, so both can run at the same time
+      - "4300:80"
+
 volumes:
   overload-data:
     # Same volume name as the earlier 'docker run', so existing data is kept
