@@ -16,7 +16,7 @@ builder.Services.AddDbContext<OverloadDbContext>(options =>
 builder.Services.AddScoped<ICurrentUser, DevCurrentUser>();
 builder.Services.AddScoped<IExerciseService, ExerciseService>();
 builder.Services.AddScoped<IWorkoutSessionService, WorkoutSessionService>();
-// builder.Services.AddScoped<ISetEntryService, SetEntryService>();
+builder.Services.AddScoped<ISetEntryService, SetEntryService>();
 
 var app = builder.Build();
 

@@ -36,6 +36,14 @@ public class WorkoutSessionService(OverloadDbContext db) : IWorkoutSessionServic
     {
         var sets = request.Sets ?? [];
 
+        // The same set number may not appear twice for one exercise
+        var duplicate = sets
+            .GroupBy(s => (s.ExerciseId, s.SetNumber))
+            .FirstOrDefault(g => g.Count() > 1);
+        if (duplicate is not null)
+            throw new ConflictException(
+                $"Set number {duplicate.Key.SetNumber} appears more than once for exercise {duplicate.Key.ExerciseId}.");
+
         // Every exercise must be visible to the user (own custom exercises or defaults)
         var exerciseIds = sets.Select(s => s.ExerciseId).Distinct().ToList();
         if (exerciseIds.Count > 0)
